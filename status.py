@@ -20,23 +20,18 @@ RUN_INTERVAL = 1
 widgets = [
     AppleSmcWidget(),
     WifiWidget('wlp4s0'),
-    BatteryWidget('BAT0'),
+    BatteryWidget('BAT0'), 
     #MpdStatusWidget('gigantea.mutantmonkey.in'),
     WeatherWidget('KBCB'),
     ClockWidget(),
 ]
 
 
-def prnt(out):
-    sys.stdout.write(out + '\n')
-    sys.stdout.flush()
-
-
-prnt(json.dumps({'version': 1}) + '[[]')
+print(json.dumps({'version': 1}) + '[[]')
 while True:
     output = []
     for widget in widgets:
         output.append(widget.output())
-    prnt(',' + json.dumps(output))
+    print(',' + json.dumps(output), flush=True)
     time.sleep(RUN_INTERVAL)
-prnt(']')
+print(']')
