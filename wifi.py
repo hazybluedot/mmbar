@@ -7,23 +7,27 @@ class WifiWidget(object):
         self.interface = interface
 
     def output(self):
+        ssid_name = 'none'
+        ip = 'none'
+        color = '#ff8888'
+        icon = 'mmbar/icons/wifi_03.xbm'
+
         try:
             out = subprocess.check_output(['iwgetid'])
             out = out.decode('utf-8')
             m = re.match(r'{interface}\s+ESSID:"(.+?)"\n'.format(
                 interface=self.interface), out)
 
-            ssid_name = 'none'
-            ip = 'none'
-
             try:
                 ssid_name = m.group(1)
             except AttributeError as e:
                 pass
+        except subprocess.CalledProcessError:
+            color = '#3f3f3f'
+            icon = 'mmbar/icons/wifi_off_03.xbm'
 
-            color = '#ff8888'
-
-            if not ssid_name == 'none':
+        if not ssid_name == 'none':
+            try:
                 out = subprocess.check_output(['ip','addr','show',self.interface])
                 out = out.decode('utf-8')
                 for line in out.split('\n'):
@@ -33,23 +37,24 @@ class WifiWidget(object):
                     if ipm:
                         ip = ipm.group(1)
                         break
+            except subprocess.CalledProcessError:
+                # ip addr show could fail if interface wasn't
+                # available, but previous subprocess call should have
+                # already determined that
+                pass
+            except AttributeError:
+                # call to `ip addr show interface` succeeded but regex did not match
+                pass
 
-            if not ssid_name == 'none' and not ip == 'none':
-                color = '#7adf8f'
+        if not ssid_name == 'none' and not ip == 'none':
+            color = '#7adf8f'
             
-            return {
-                'name': "wifi",
-                'instance': self.interface,
-                'full_text': ' ' + ssid_name,
-                'color': color,
-                'icon': 'mmbar/icons/wifi_03.xbm',
-            }
-        except subprocess.CalledProcessError:
-            return {
-                'name': "wifi",
-                'instance': self.interface,
-                'full_text': ' ',
-                'color': '#3f3f3f',
-                'icon': 'mmbar/icons/wifi_off_03.xbm',
-            }
-            pass
+
+        return {
+            'name': "wifi",
+            'instance': self.interface,
+            'full_text': ' ' + ssid_name,
+            'color': color,
+            'icon': icon,
+        }
+        pass
