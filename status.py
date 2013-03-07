@@ -11,15 +11,17 @@ import time
 
 from battery import *
 from clock import *
-from mpdstatus import *
+# from mpdstatus import *
 from weather import *
 from wifi import *
+from applesmc import *
 
-RUN_INTERVAL = 2
+RUN_INTERVAL = 1
 widgets = [
-    #WifiWidget('wlan0'),
-    #BatteryWidget('CMB1'),
-    MpdStatusWidget('gigantea.mutantmonkey.in'),
+    AppleSmcWidget(),
+    WifiWidget('wlp4s0'),
+    BatteryWidget('BAT0'),
+    #MpdStatusWidget('gigantea.mutantmonkey.in'),
     WeatherWidget('KBCB'),
     ClockWidget(),
 ]
