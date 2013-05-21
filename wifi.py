@@ -22,7 +22,7 @@ class WifiWidget(object):
                 ssid_name = m.group(1)
             except AttributeError as e:
                 pass
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except subprocess.CalledProcessError:
             color = '#3f3f3f'
             icon = 'mmbar/icons/wifi_off_03.xbm'
 
