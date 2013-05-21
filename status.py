@@ -11,30 +11,27 @@ import time
 
 from battery import *
 from clock import *
-from mpdstatus import *
+# from mpdstatus import *
 from weather import *
 from wifi import *
+from applesmc import *
 
 RUN_INTERVAL = 2
 widgets = [
-    #WifiWidget('wlan0'),
-    #BatteryWidget('CMB1'),
-    MpdStatusWidget('gigantea.mutantmonkey.in'),
+    AppleSmcWidget(),
+    WifiWidget('eth1'),
+    BatteryWidget('BAT0'), 
+    #MpdStatusWidget('gigantea.mutantmonkey.in'),
     WeatherWidget('KBCB'),
     ClockWidget(),
 ]
 
 
-def prnt(out):
-    sys.stdout.write(out + '\n')
-    sys.stdout.flush()
-
-
-prnt(json.dumps({'version': 1}) + '[[]')
+print(json.dumps({'version': 1}) + '[[]')
 while True:
     output = []
     for widget in widgets:
         output.append(widget.output())
-    prnt(',' + json.dumps(output))
+    print(',' + json.dumps(output), flush=True)
     time.sleep(RUN_INTERVAL)
-prnt(']')
+print(']')

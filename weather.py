@@ -24,9 +24,9 @@ class WeatherWidget(object):
 
                 self.last_run = datetime.datetime.now()
                 self.full_text = ' {weather}, {temperature}°C'.format(
-                        weather=w.conditions or w.cover,
+                        weather=w.conditions or w.cover or "fair",
                         temperature=w.temperature)
-            except urllib.error.URLError:
+            except:
                 pass
 
         if len(self.full_text) > 0:
